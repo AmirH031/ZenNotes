@@ -10,7 +10,7 @@ export type ThemeMode = 'light' | 'dark';
 
 export type ZenMode = 'off' | 'on';
 
-export type SoundType = 'none' | 'rain' | 'cafe' | 'forest';
+export type SoundType = 'none' | 'rain' | 'ocean' | 'forest';
 
 export interface AppState {
   notes: Note[];
@@ -18,4 +18,7 @@ export interface AppState {
   theme: ThemeMode;
   zenMode: ZenMode;
   soundType: SoundType;
+  previewVisible: boolean;
+  editorHeight: number;
+  previewHeight: number;
 }

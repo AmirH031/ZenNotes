@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FilePlus, Trash, Menu } from 'lucide-react';
+import { FilePlus, Trash2, Menu } from 'lucide-react';
 import { useAppContext } from '../../context/AppContext';
 import { formatDate, countWords } from '../../utils/helpers';
 
@@ -12,6 +12,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const [isRenaming, setIsRenaming] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
 
   const handleCreateNote = () => {
     dispatch({
@@ -26,6 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const handleSelectNote = (id: string) => {
     dispatch({ type: 'SET_ACTIVE_NOTE', payload: id });
     setIsMobileMenuOpen(false);
+    setShowDeleteConfirm(null);
   };
 
   const handleDeleteNote = (id: string, e: React.MouseEvent) => {
@@ -35,9 +37,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       return;
     }
 
-    if (window.confirm('Are you sure you want to delete this note?')) {
+    if (showDeleteConfirm === id) {
       dispatch({ type: 'DELETE_NOTE', payload: id });
+      setShowDeleteConfirm(null);
+    } else {
+      setShowDeleteConfirm(id);
     }
+  };
+
+  const cancelDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowDeleteConfirm(null);
   };
 
   const startRenaming = (id: string, currentTitle: string, e: React.MouseEvent) => {
@@ -66,11 +76,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+    setShowDeleteConfirm(null);
   };
 
   return (
     <>
-      {/* Mobile Menu Button - Now positioned in the header area */}
       <div className="md:hidden fixed top-0 left-0 z-50 p-2 m-2">
         <button
           className="p-2 bg-white dark:bg-gray-800 rounded-md shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -81,7 +91,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
         </button>
       </div>
 
-      {/* Overlay for mobile menu */}
       {isMobileMenuOpen && (
         <div 
           className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
@@ -113,9 +122,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               <div
                 key={note.id}
                 onClick={() => handleSelectNote(note.id)}
-                className={`group px-3 py-2 rounded-md cursor-pointer shadow-md transition-all duration-300 hover:scale-[1.02] ${
+                className={`group relative px-3 py-2 rounded-md cursor-pointer transition-all duration-300 ${
                   state.activeNoteId === note.id
-                    ? 'bg-blue-100 dark:bg-blue-900'
+                    ? 'bg-blue-100 dark:bg-blue-900 shadow-md'
                     : 'bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'
                 }`}
               >
@@ -133,7 +142,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                   ) : (
                     <div className="flex items-center justify-between w-full">
                       <span
-                        className={`text-sm font-medium truncate ${
+                        className={`text-sm font-medium truncate flex-grow ${
                           state.activeNoteId === note.id
                             ? 'text-blue-600 dark:text-blue-400'
                             : 'text-gray-700 dark:text-gray-200'
@@ -142,13 +151,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
                       >
                         {note.title}
                       </span>
-                      <button
-                        onClick={(e) => handleDeleteNote(note.id, e)}
-                        className="opacity-0 group-hover:opacity-100 p-1 rounded-md hover:bg-red-100 dark:hover:bg-red-900 text-red-500 focus:outline-none transition-opacity duration-200"
-                        aria-label="Delete note"
-                      >
-                        <Trash className="h-3.5 w-3.5" />
-                      </button>
+                      
+                      <div className="flex items-center gap-2">
+                        {showDeleteConfirm === note.id ? (
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={(e) => handleDeleteNote(note.id, e)}
+                              className="p-1 rounded-md bg-red-500 hover:bg-red-600 text-white"
+                              aria-label="Confirm delete"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              onClick={cancelDelete}
+                              className="p-1 rounded-md bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500"
+                              aria-label="Cancel delete"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={(e) => handleDeleteNote(note.id, e)}
+                            className={`p-1 rounded-md hover:bg-red-100 dark:hover:bg-red-900 text-red-500 transition-colors ${
+                              state.activeNoteId === note.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                            }`}
+                            aria-label="Delete note"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>

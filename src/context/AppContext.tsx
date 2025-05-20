@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { AppState, Note, SoundType, ThemeMode, ZenMode } from '../types';
 import { generateId } from '../utils/helpers';
 
-// Define action types
 type Action =
   | { type: 'SET_NOTES'; payload: Note[] }
   | { type: 'SET_ACTIVE_NOTE'; payload: string }
@@ -11,18 +10,22 @@ type Action =
   | { type: 'DELETE_NOTE'; payload: string }
   | { type: 'SET_THEME'; payload: ThemeMode }
   | { type: 'SET_ZEN_MODE'; payload: ZenMode }
-  | { type: 'SET_SOUND'; payload: SoundType };
+  | { type: 'SET_SOUND'; payload: SoundType }
+  | { type: 'TOGGLE_PREVIEW'; payload?: boolean }
+  | { type: 'SET_EDITOR_HEIGHT'; payload: number }
+  | { type: 'SET_PREVIEW_HEIGHT'; payload: number };
 
-// Initial state
 const initialState: AppState = {
   notes: [],
   activeNoteId: null,
   theme: 'light',
   zenMode: 'off',
   soundType: 'none',
+  previewVisible: true,
+  editorHeight: 50,
+  previewHeight: 50,
 };
 
-// Context setup
 interface AppContextProps {
   state: AppState;
   dispatch: React.Dispatch<Action>;
@@ -30,7 +33,6 @@ interface AppContextProps {
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
 
-// Reducer function
 const reducer = (state: AppState, action: Action): AppState => {
   const now = new Date().toISOString();
 
@@ -100,16 +102,29 @@ const reducer = (state: AppState, action: Action): AppState => {
         ...state,
         soundType: action.payload,
       };
+    case 'TOGGLE_PREVIEW':
+      return {
+        ...state,
+        previewVisible: action.payload !== undefined ? action.payload : !state.previewVisible,
+      };
+    case 'SET_EDITOR_HEIGHT':
+      return {
+        ...state,
+        editorHeight: action.payload,
+      };
+    case 'SET_PREVIEW_HEIGHT':
+      return {
+        ...state,
+        previewHeight: action.payload,
+      };
     default:
       return state;
   }
 };
 
-// Provider component
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // Load saved state from localStorage
   useEffect(() => {
     const savedState = localStorage.getItem('markWriteState');
     if (savedState) {
@@ -117,7 +132,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         const parsedState = JSON.parse(savedState) as AppState;
         dispatch({ type: 'SET_NOTES', payload: parsedState.notes });
         
-        // Set active note if available, otherwise default to first note or null
         const activeId = parsedState.activeNoteId && 
           parsedState.notes.some(note => note.id === parsedState.activeNoteId) 
           ? parsedState.activeNoteId 
@@ -125,11 +139,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         
         dispatch({ type: 'SET_ACTIVE_NOTE', payload: activeId });
         dispatch({ type: 'SET_THEME', payload: parsedState.theme || 'light' });
+        dispatch({ type: 'TOGGLE_PREVIEW', payload: parsedState.previewVisible });
+        dispatch({ type: 'SET_EDITOR_HEIGHT', payload: parsedState.editorHeight });
+        dispatch({ type: 'SET_PREVIEW_HEIGHT', payload: parsedState.previewHeight });
       } catch (error) {
         console.error('Error parsing saved state', error);
       }
     } else {
-      // Create default note if no saved notes
       dispatch({
         type: 'CREATE_NOTE',
         payload: {
@@ -140,14 +156,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
-  // Save state to localStorage whenever it changes
   useEffect(() => {
     if (state.notes.length > 0) {
       localStorage.setItem('markWriteState', JSON.stringify(state));
     }
   }, [state]);
 
-  // Apply theme to document
   useEffect(() => {
     document.documentElement.classList.toggle('dark', state.theme === 'dark');
   }, [state.theme]);
@@ -155,7 +169,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return <AppContext.Provider value={{ state, dispatch }}>{children}</AppContext.Provider>;
 };
 
-// Custom hook for using the context
 export const useAppContext = () => {
   const context = useContext(AppContext);
   if (context === undefined) {

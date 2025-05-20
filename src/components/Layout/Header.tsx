@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isSidebarOpen }) => {
   };
 
   return (
-    <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-2 px-4 flex items-center justify-between h-14">
+    <header className="fixed top-0 left-0 right-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 py-2 px-4 flex items-center justify-between h-14 z-50">
       <div className="flex items-center">
         <button 
           onClick={toggleSidebar}
@@ -25,8 +25,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isSidebarOpen }) => {
           <Menu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
         </button>
         <div className="flex items-center space-x-2">
-          {/* <img src="/logo.svg" alt="ZenNote Logo" className="h-8 w-8" /> */}
-          <h1 className="text-xl font-semibold text-gray-800 dark:text-white">ZenNote</h1>
+          <h1 className="text-xl font-semibold text-gray-800 dark:text-white">ZenNotes</h1>
         </div>
       </div>
       
@@ -47,4 +46,4 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isSidebarOpen }) => {
   );
 };
 
-export default Header
+export default Header;

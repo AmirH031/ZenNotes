@@ -20,7 +20,7 @@ function App() {
         <div className="flex flex-col h-screen">
           <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
           
-          <div className="flex-grow flex relative">
+          <div className="flex-grow flex relative mt-14">
             {isSidebarOpen && <Sidebar isOpen={isSidebarOpen} />}
             
             <main className="flex-grow transition-all duration-300">

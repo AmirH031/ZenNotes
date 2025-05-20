@@ -9,7 +9,6 @@ const ZenModeBackground: React.FC<ZenModeBackgroundProps> = ({ children }) => {
   const { state } = useAppContext();
   
   useEffect(() => {
-    // Add overflow hidden to body when in zen mode to prevent scrolling
     if (state.zenMode === 'on') {
       document.body.style.overflow = 'hidden';
     } else {
@@ -25,14 +24,13 @@ const ZenModeBackground: React.FC<ZenModeBackgroundProps> = ({ children }) => {
     return <>{children}</>;
   }
 
-  // Choose background based on sound type
   let backgroundGradient = '';
   switch (state.soundType) {
     case 'rain':
       backgroundGradient = 'from-blue-900 via-blue-600 to-blue-400';
       break;
-    case 'cafe':
-      backgroundGradient = 'from-amber-900 via-amber-700 to-amber-500';
+    case 'ocean':
+      backgroundGradient = 'from-cyan-900 via-cyan-600 to-cyan-400';
       break;
     case 'forest':
       backgroundGradient = 'from-green-900 via-green-700 to-green-500';
@@ -43,11 +41,9 @@ const ZenModeBackground: React.FC<ZenModeBackgroundProps> = ({ children }) => {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Animated Background */}
       <div 
         className={`fixed inset-0 bg-gradient-to-br ${backgroundGradient} opacity-20 dark:opacity-40 z-0`}
       >
-        {/* Dynamic floating elements based on sound type */}
         {state.soundType === 'rain' && (
           <div className="absolute inset-0 overflow-hidden">
             {Array.from({ length: 20 }).map((_, i) => (
@@ -67,18 +63,19 @@ const ZenModeBackground: React.FC<ZenModeBackgroundProps> = ({ children }) => {
           </div>
         )}
         
-        {state.soundType === 'cafe' && (
+        {state.soundType === 'ocean' && (
           <div className="absolute inset-0 overflow-hidden">
             {Array.from({ length: 15 }).map((_, i) => (
               <div 
                 key={i}
-                className="absolute bg-amber-200 dark:bg-amber-400 opacity-20 rounded-full"
+                className="absolute bg-cyan-200 dark:bg-cyan-400 opacity-20"
                 style={{
-                  width: `${Math.random() * 10 + 5}px`,
-                  height: `${Math.random() * 10 + 5}px`,
+                  width: `${Math.random() * 100 + 50}px`,
+                  height: `${Math.random() * 20 + 10}px`,
+                  borderRadius: '50%',
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
-                  animation: `pulse ${Math.random() * 4 + 3}s ease-in-out infinite`,
+                  animation: `float ${Math.random() * 8 + 4}s ease-in-out infinite`,
                   animationDelay: `${Math.random() * 5}s`
                 }}
               />
@@ -107,8 +104,7 @@ const ZenModeBackground: React.FC<ZenModeBackgroundProps> = ({ children }) => {
         )}
       </div>
       
-      {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 min-h-screen">
         {children}
       </div>
     </div>
