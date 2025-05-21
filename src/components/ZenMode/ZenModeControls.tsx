@@ -63,10 +63,15 @@ const ZenModeControls: React.FC = () => {
     }
   };
 
-  const handleSelectSound = (soundType: SoundType) => {
-    stopAllSounds();
-    dispatch({ type: 'SET_SOUND', payload: soundType });
-  };
+ const handleSelectSound = (soundType: SoundType) => {
+  stopAllSounds();
+  dispatch({ type: 'SET_SOUND', payload: soundType });
+
+  if (soundType === 'none') {
+    dispatch({ type: 'SET_ZEN_MODE', payload: 'off' });
+  }
+};
+
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
