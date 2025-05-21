@@ -2,145 +2,216 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* Add some custom styles for the prose */
+/* Base styles */
+:root {
+  --transition-duration: 300ms;
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Typography */
 .prose {
-@apply max-w-none;
+  @apply max-w-none;
 }
 
-/* Make the editor textarea more comfortable */
 textarea {
-line-height: 1.6;
-font-size: 16px;
+  line-height: 1.6;
+  font-size: 16px;
 }
 
-/* Animation for zen mode backgrounds */
+/* Interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-offset-gray-900;
+}
+
+/* Animations */
 @keyframes fall {
-0% {
-transform: translateY(-10px);
-opacity: 0;
-}
-20% {
-opacity: 0.8;
-}
-100% {
-transform: translateY(100vh);
-opacity: 0;
-}
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
 }
 
 @keyframes pulse {
-0%, 100% {
-transform: scale(1);
-opacity: 0.2;
-}
-50% {
-transform: scale(1.5);
-opacity: 0.5;
-}
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
 }
 
 @keyframes float {
-0%, 100% {
-transform: translateY(0) rotate(0deg);
-}
-50% {
-transform: translateY(-20px) rotate(10deg);
-}
-}
-
-/* 3D transforms */
-@keyframes rotate-y {
-from { transform: rotateY(0deg); }
-to { transform: rotateY(360deg); }
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(10deg);
+  }
 }
 
-.rotate-y-90 {
-transform: rotateY(90deg);
+/* Book transitions */
+.book-enter {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
-.rotate-y-180 {
-transform: rotateY(180deg);
+.book-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--transition-duration) var(--transition-timing),
+              transform var(--transition-duration) var(--transition-timing);
 }
 
-/* Style tweaks for the markdown preview */
+.book-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.book-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--transition-duration) var(--transition-timing),
+              transform var(--transition-duration) var(--transition-timing);
+}
+
+/* Markdown preview styles */
 .prose pre {
-@apply bg-gray-100 dark:bg-gray-800 !important;
+  @apply bg-gray-100 dark:bg-gray-800 rounded-lg !important;
 }
 
 .prose code {
-@apply bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-gray-800 dark:text-gray-200 !important;
+  @apply bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded text-gray-800 dark:text-gray-200 !important;
 }
 
 .prose a {
-@apply text-blue-600 dark:text-blue-400 !important;
+  @apply text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors !important;
 }
 
-/* Style for the range input */
+/* Range input styling */
 input[type="range"] {
--webkit-appearance: none;
-appearance: none;
-height: 4px;
-border-radius: 4px;
-background: #e2e8f0;
-}
-
-.dark input[type="range"] {
-background: #4b5563;
+  @apply appearance-none h-1 rounded-full bg-gray-200 dark:bg-gray-700;
+  transition: background-color var(--transition-duration) var(--transition-timing);
 }
 
 input[type="range"]::-webkit-slider-thumb {
--webkit-appearance: none;
-appearance: none;
-width: 12px;
-height: 12px;
-border-radius: 50%;
-background: #3b82f6;
-cursor: pointer;
+  @apply appearance-none w-3 h-3 rounded-full bg-blue-500 dark:bg-blue-400 cursor-pointer;
+  transition: transform var(--transition-duration) var(--transition-timing),
+              background-color var(--transition-duration) var(--transition-timing);
 }
 
-.dark input[type="range"]::-webkit-slider-thumb {
-background: #60a5fa;
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
 }
 
-/* Resizable panel styles with centered cursor */
+/* Resizable panel styles */
 .resize-handle {
-@apply bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors;
-position: relative;
-width: 100%;
-height: 10px;
-cursor: row-resize;
+  @apply bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors relative;
+  height: 6px;
+  cursor: row-resize;
 }
 
 .resize-handle-vertical {
-width: 10px;
-height: 100%;
-cursor: col-resize;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
 }
 
-/* Center the resize cursor */
 .resize-handle::after {
-content: '';
-position: absolute;
-top: 50%;
-left: 50%;
-width: 24px;
-height: 24px;
-transform: translate(-50%, -50%);
-cursor: inherit;
+  content: '';
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+  width: 24px;
+  height: 24px;
+  cursor: inherit;
 }
 
-/* Touch-friendly resize handles */
+/* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
-.resize-handle {
-height: 16px;
+  .resize-handle {
+    height: 12px;
+  }
+
+  .resize-handle-vertical {
+    width: 12px;
+  }
+
+  .resize-handle::after {
+    width: 32px;
+    height: 32px;
+  }
+
+  input[type="range"] {
+    height: 8px;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+  }
 }
 
-.resize-handle-vertical {
-width: 16px;
+/* Book view toolbar */
+.book-view-toolbar {
+  @apply fixed top-0 left-0 right-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 py-2 px-4 z-50;
+  transition: transform var(--transition-duration) var(--transition-timing),
+              opacity var(--transition-duration) var(--transition-timing);
 }
 
-.resize-handle::after {
-width: 36px;
-height: 36px;
+.book-view-toolbar.hidden {
+  transform: translateY(-100%);
+  opacity: 0;
 }
+
+/* Zen mode transitions */
+.zen-mode-enter {
+  opacity: 0;
+}
+
+.zen-mode-enter-active {
+  opacity: 1;
+  transition: opacity var(--transition-duration) var(--transition-timing);
+}
+
+.zen-mode-exit {
+  opacity: 1;
+}
+
+.zen-mode-exit-active {
+  opacity: 0;
+  transition: opacity var(--transition-duration) var(--transition-timing);
+}
+
+/* Accessibility improvements */
+.sr-only {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+}
+
+[role="button"],
+button {
+  @apply cursor-pointer select-none;
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .prose a {
+    text-decoration: underline;
+  }
+  
+  button,
+  [role="button"] {
+    border: 1px solid transparent;
+  }
 }
