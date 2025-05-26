@@ -13,6 +13,14 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@tiptap/extension-code-block": "^2.2.4",
+    "@tiptap/extension-heading": "^2.2.4",
+    "@tiptap/extension-link": "^2.2.4",
+    "@tiptap/extension-placeholder": "^2.2.4",
+    "@tiptap/extension-underline": "^2.2.4",
+    "@tiptap/pm": "^2.2.4",
+    "@tiptap/react": "^2.2.4",
+    "@tiptap/starter-kit": "^2.2.4",
     "gh-pages": "^6.3.0",
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",

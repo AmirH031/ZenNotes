@@ -149,8 +149,33 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       dispatch({
         type: 'CREATE_NOTE',
         payload: {
-          title: 'Welcome to MarkWrite',
-          content: `# Welcome to MarkWrite!\n\nThis is a distraction-free Markdown editor with live preview.\n\n## Features\n\n- **Split-screen** layout with live preview\n- **Markdown toolbar** for formatting\n- **Live stats** for word and character count\n- **LocalStorage** for saving your notes\n- **Theme toggle** for light and dark mode\n- **Zen mode** for distraction-free writing\n\nEnjoy writing!`,
+          title: 'Welcome to ZenNotes',
+          content: `<h1>Welcome to ZenNotes</h1>
+<p>Your personal space for distraction-free writing and creative expression.</p>
+<hr>
+<h2>Key Features</h2>
+<ul>
+  <li>Clean, intuitive rich text editor</li>
+  <li>Real-time word and character counting</li>
+  <li>Automatic saving to local storage</li>
+  <li>Dark mode for comfortable night writing</li>
+  <li>Zen mode with ambient sounds for focus</li>
+  <li>Book view for a different reading experience</li>
+  <li>Export your work to PDF</li>
+</ul>
+<hr>
+<h2>Getting Started</h2>
+<p>Use the toolbar above to format your text. You can create:</p>
+<ul>
+  <li>Headers for structure</li>
+  <li>Lists for organization</li>
+  <li>Quotes for emphasis</li>
+  <li>Code blocks for technical content</li>
+</ul>
+<blockquote>
+  <p>"The scariest moment is always just before you start." - Stephen King</p>
+</blockquote>
+<p>Ready to begin your writing journey? Create a new note using the + button in the sidebar and start writing!</p>`,
         },
       });
     }

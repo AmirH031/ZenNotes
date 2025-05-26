@@ -8,7 +8,7 @@ interface FlipBookProps {
   onContentChange: (content: string) => void;
 }
 
-const FlipBook: React.FC<FlipBookProps> = ({ content }) => {
+const FlipBook: React.FC<FlipBookProps> = ({ }) => {
   const { state } = useAppContext();
   const notes = state.notes;
   const [showToolbar, setShowToolbar] = useState(true);
